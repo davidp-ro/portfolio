@@ -1,9 +1,9 @@
 <script>
-import Section from "./section.svelte";
-
+  import Section from "./section.svelte";
 </script>
 
 <Section id="home">
+  <div class="fullheight">
     <div
       class="container max-w-lg px-4 py-32 mx-auto text-left md:max-w-none md:text-center"
     >
@@ -32,6 +32,41 @@ import Section from "./section.svelte";
             Let's talk!
           </a>
         </span>
+        <span class="floaty relative inline-flex w-5 mt-10 text-pink-800">
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            aria-hidden="true"
+            viewBox="0 0 320 512"
+          >
+            <path
+              fill="currentColor"
+              d="M143 256.3 7 120.3a23.9 23.9 0 0 1 0-33.9l22.6-22.6a23.9 23.9 0 0 1 33.9 0l96.4 96.4 96.4-96.4a23.9 23.9 0 0 1 33.9 0L313 86.3a23.9 23.9 0 0 1 0 33.9l-136 136c-9.4 9.5-24.6 9.5-34 .1zm34 192 136-136a23.9 23.9 0 0 0 0-33.9l-22.6-22.6a23.9 23.9 0 0 0-33.9 0L160 352.1l-96.4-96.4a23.9 23.9 0 0 0-33.9 0L7 278.3a23.9 23.9 0 0 0 0 33.9l136 136c9.4 9.5 24.6 9.5 34 .1z"
+            />
+          </svg>
+        </span>
       </div>
     </div>
+  </div>
 </Section>
+
+<style>
+  .fullheight {
+    height: 80vh;
+  }
+
+  .floaty {
+    animation: float 3s ease-in-out infinite;
+  }
+
+  @keyframes float {
+    0% {
+      transform: translatey(0px);
+    }
+    50% {
+      transform: translatey(-15px);
+    }
+    100% {
+      transform: translatey(0px);
+    }
+  }
+</style>
