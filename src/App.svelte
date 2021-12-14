@@ -39,10 +39,28 @@
       target.classList.add("opacity-0");
       observer.observe(target);
     });
+
+    // Set dark mode and watch for updates in the 'prefers-color-scheme' prop.
+    // Firstly checks local storage for user preference
+    if (
+      window.localStorage.getItem("theme") == "dark" ||
+      (window.localStorage.getItem("theme") == null &&
+        window.matchMedia &&
+        window.matchMedia("(prefers-color-scheme: dark)").matches)
+    ) {
+      darkMode.set(true);
+    }
+
+    window
+      .matchMedia("(prefers-color-scheme: dark)")
+      .addEventListener("change", (e) => {
+        darkMode.set(e.matches);
+        window.localStorage.setItem("theme", e.matches ? "dark" : "light");
+      });
   });
 </script>
 
-<main class="{$darkMode ? 'dark' : ''}" transition:fade>
+<main class={$darkMode ? "dark" : ""} transition:fade>
   <Navbar />
   <Hero />
   <Intro />
