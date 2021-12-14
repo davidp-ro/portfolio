@@ -6,12 +6,8 @@
 
     <title>David Pescariu &times; Portfolio</title>
     <link rel="icon" type="image/png" href="/favicon.png" />
-    <link rel="manifest" href="/manifest.webmanifest">
+    <link rel="manifest" href="/manifest.webmanifest" />
 
-    <link
-      rel="stylesheet"
-      href="https://cdnjs.cloudflare.com/ajax/libs/tailwindcss/2.0.2/tailwind.min.css"
-    />
     <link
       href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&display=swap"
       rel="stylesheet"
@@ -19,9 +15,29 @@
 
     <link rel="stylesheet" href="/build/bundle.css" />
     <script defer src="/build/bundle.js"></script>
+
+    <style>
+      @keyframes fade-in {
+        0% {
+          opacity: 0;
+        }
+
+        100% {
+          opacity: 1;
+        }
+      }
+
+      .scroll-animation {
+        animation: fade-in .5s ease-in forwards;
+      }
+
+      .scroll-animation-long {
+        animation: fade-in 1.5s ease-in forwards;
+      }
+    </style>
   </head>
 
-  <body style="font-family: Space Grotesk"></body>
+  <body></body>
 </html>
 
 <!-- 

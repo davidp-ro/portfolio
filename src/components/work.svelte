@@ -4,7 +4,7 @@
 </script>
 
 <Section id="work">
-  <div class="py-24">
+  <div class="py-24 show-on-scroll-long">
     <h3
       class="mt-1 text-2xl font-bold text-left text-gray-800 sm:mx-6 sm:text-3xl md:text-4xl lg:text-5xl sm:text-center sm:mx-0"
     >
