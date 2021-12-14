@@ -47,9 +47,9 @@
           <div
             class="flex flex-col items-start justify-center w-full space-x-6 text-center lg:space-x-8 md:w-2/3 md:mt-0 md:flex-row md:items-center"
           >
-            <NavbarLink isActive={true} href="#" text="About Me" />
-            <NavbarLink isActive={false} href="#" text="My Work" />
-            <NavbarLink isActive={false} href="#" text="Contact" />
+            <NavbarLink isActive={true} href="#about" text="About Me" />
+            <NavbarLink isActive={false} href="#work" text="My Work" />
+            <NavbarLink isActive={false} href="#contact" text="Contact" />
           </div>
           <div
             class="flex flex-col items-start justify-end w-full pt-4 md:items-center md:w-1/3 md:flex-row md:py-0"
@@ -100,7 +100,7 @@
               rel="noopener"
               class="inline-flex items-center w-full px-6 py-3 text-sm font-medium leading-4 text-white bg-gradient-to-br from-pink-700 to-pink-500 hover:from-pink-600 hover:to-pink-400 md:px-3 md:w-auto md:rounded-full lg:px-5 focus:outline-none md:focus:ring-2 focus:ring-0 focus:ring-offset-2 focus:ring-pink-700"
             >
-              Hire Me!
+              View Résumé
             </a>
           </div>
         </div>

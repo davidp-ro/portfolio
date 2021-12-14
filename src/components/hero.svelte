@@ -5,7 +5,7 @@ import { darkMode } from "../stores";
 </script>
 
 <Section id="home" hasIsometricBackground={true}>
-  <div class="fullheight">
+  <div class="fullheight select-none">
     <div
       class="container max-w-lg px-4 py-32 mx-auto text-left md:max-w-none md:text-center"
     >

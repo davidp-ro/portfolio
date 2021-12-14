@@ -1,8 +1,10 @@
 <script>
+import { darkMode } from "../stores";
+
   import Section from "./section.svelte";
 </script>
 
-<Section>
+<Section id="about">
   <div class="show-on-scroll flex flex-wrap items-center sm:-mx-3">
     <div class="w-full md:w-1/2 md:px-3">
       <div
@@ -29,7 +31,7 @@
       </div>
     </div>
 
-    <div class="overflow-hidden rounded-full shadow-2xl w-60 m-auto">
+    <div class="overflow-hidden rounded-full {$darkMode ? 'shadow-lg shadow-gray-700' : 'shadow-2xl'} w-60 m-auto md:mt-20">
       <img src="assets/profile.jpg" alt="Profile" />
     </div>
   </div>

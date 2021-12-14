@@ -1,9 +1,9 @@
-<section class="text-gray-700 bg-gray-100 body-font">
+<section class="text-gray-700 bg-gray-100 dark:bg-neutral-900 body-font">
   <div
     class="container flex flex-col items-center px-8 py-8 mx-auto max-w-7xl sm:flex-row"
   >
     <span
-      class="text-xl font-black leading-none text-gray-900 select-none logo"
+      class="text-xl font-black leading-none text-gray-900 dark:text-gray-400 select-none logo"
     >
       David Pescariu
     </span>
