@@ -10,7 +10,7 @@
   });
 </script>
 
-<section class="mt-48 md:mt-64">
+<section class="mt-32 md:mt-64">
   {#if ready}
     <div
       transition:fade={{
@@ -46,7 +46,7 @@
         rel="noopener noreferer"
       >
         co-founder
-      </a> & volunteer from Cluj, 🇷🇴. Not specifically in that order.
+      </a> & volunteer from Cluj, 🇷🇴. Not necessarily in that order.
     </p>
   {/if}
 </section>
