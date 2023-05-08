@@ -3,6 +3,8 @@
   import Hero from "$lib/components/hero.svelte";
   import Socials from "$lib/components/socials.svelte";
   import Work from "$lib/components/work.svelte";
+  import Footer from "$lib/components/footer.svelte";
+  import GetInTouch from "$lib/components/getInTouch.svelte";
 </script>
 
 <BackgroundBlob />
@@ -13,5 +15,8 @@
     <Socials />
 
     <Work />
+    <GetInTouch />
+
+    <Footer />
   </div>
 </main>

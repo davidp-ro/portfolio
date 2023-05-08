@@ -154,7 +154,7 @@
 
   a {
     @apply p-2 md:p-0 md:border-none border-base-300 border-2 rounded-full
-      hover:border-accent-300;
+      hover:border-accent-300 cursor-pointer;
   }
 
   .no-border {
