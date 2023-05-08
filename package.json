@@ -1,6 +1,7 @@
 {
   "name": "portfolio",
-  "version": "0.0.1",
+  "version": "1.0.0",
+  "author": "David Pescariu",
   "private": true,
   "scripts": {
     "dev": "vite dev --host",

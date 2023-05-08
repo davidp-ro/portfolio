@@ -3,7 +3,7 @@
   import { fade } from "svelte/transition";
   import { sineIn } from "svelte/easing";
   import constants from "$lib/constants";
-  
+
   let ready = false;
   onMount(() => {
     ready = true;

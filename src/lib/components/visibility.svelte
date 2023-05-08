@@ -1,7 +1,7 @@
 <script lang="ts">
   import { onDestroy, onMount } from "svelte";
 
-  export let visibilityUpdate:(isVisible: boolean) => void;
+  export let visibilityUpdate: (isVisible: boolean) => void;
   export let hasObserverSupport = false;
   export let observerOptions = {
     rootMargin: `0px 0px 0px 0px`,

@@ -4,7 +4,7 @@ const constants = {
     heroDelaysMs: [100, 500, 900],
     socialDurationMs: 1000,
     socialDelayMs: 1000,
-  }
-}
+  },
+};
 
 export default constants;
