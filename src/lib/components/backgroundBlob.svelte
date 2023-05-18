@@ -5,11 +5,21 @@
 
   const registerListener = () => {
     document.addEventListener("mousemove", (event) => {
+      // All coords / sizes are in px
       const { clientX, clientY } = event;
+
+      const halfScreenHeight = window.innerHeight / 2;
+      const halfScreenWidth = window.innerWidth / 2;
+
+      // Width & Height of the is 80rem (=320px) so half is 160
+      const posX = clientX - halfScreenWidth - 160;
+      const posY = clientY - halfScreenHeight - 160;
+
       el?.animate(
         {
-          left: `${clientX}px`,
-          top: `${clientY}px`,
+          // Animating with transform/translate and not just top/left values so
+          // we get a good CLS (Cumulative Layout Shift) score!
+          transform: `translate(${posX}px, ${posY}px)`,
         },
         { duration: 3000, fill: "forwards" }
       );

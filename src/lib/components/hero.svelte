@@ -1,61 +1,67 @@
-<script lang="ts">
-  import { onMount } from "svelte";
-  import { fade } from "svelte/transition";
-  import { sineIn } from "svelte/easing";
-  import constants from "$lib/constants";
-
-  let ready = false;
-  onMount(() => {
-    ready = true;
-  });
-</script>
-
 <section class="mt-32 md:mt-64">
-  {#if ready}
-    <div
-      transition:fade={{
-        delay: constants.animations.heroDelaysMs[0],
-        duration: constants.animations.heroDurationMs,
-        easing: sineIn,
-      }}
-      class="font-bold uppercase sm:text-lg text-md text-accent-300"
+  <div class="hero-name custom-fade-in anim-delay-100">Hi there! I'm David 👋</div>
+
+  <div class="hero-title custom-fade-in anim-delay-500">
+    I create digital products.
+  </div>
+
+  <p class="hero-subtitle custom-fade-in anim-delay-900">
+    I'm a developer, student, <a
+      href="https://www.prisma-safety.com/"
+      target="_blank"
+      rel="noopener noreferer"
     >
-      Hi there! I'm David 👋
-    </div>
-    <div
-      transition:fade={{
-        delay: constants.animations.heroDelaysMs[1],
-        duration: constants.animations.heroDurationMs,
-        easing: sineIn,
-      }}
-      class="font-serif font-bold sm:text-8xl text-6xl"
-    >
-      I create digital products.
-    </div>
-    <p
-      transition:fade={{
-        delay: constants.animations.heroDelaysMs[2],
-        duration: constants.animations.heroDurationMs,
-        easing: sineIn,
-      }}
-      class="mt-10 font-light sm:text-2xl text-xl"
-    >
-      I'm a developer, student, <a
-        href="https://www.prisma-safety.com/"
-        target="_blank"
-        rel="noopener noreferer"
-      >
-        co-founder
-      </a> & volunteer from Cluj, 🇷🇴. Not necessarily in that order.
-    </p>
-  {/if}
+      co-founder
+    </a> & volunteer from Cluj, 🇷🇴. Not necessarily in that order.
+  </p>
 </section>
 
 <style lang="postcss">
+  .hero-name {
+    @apply font-bold uppercase sm:text-lg text-accent-300;
+  }
+
+  .hero-title {
+    @apply font-serif font-bold sm:text-8xl text-6xl;
+  }
+
+  .hero-subtitle {
+    @apply mt-10 font-light sm:text-2xl text-xl;
+  }
+
   a {
     @apply font-normal;
   }
   a:hover {
     @apply transition-colors text-transparent bg-clip-text bg-gradient-to-r from-accent-100 to-accent-500;
+  }
+
+  /* Transitions */
+
+  .custom-fade-in {
+    animation: fade-in-animation 1000ms cubic-bezier(0.4, 0, 0.2, 1);
+    animation-fill-mode: both;
+  }
+
+  .anim-delay-100 {
+    animation-delay: 100ms;
+  }
+
+  .anim-delay-500 {
+    animation-delay: 500ms;
+  }
+
+  .anim-delay-900 {
+    animation-delay: 900ms;
+  }
+
+  @keyframes fade-in-animation {
+    0% {
+      opacity: 0;
+    }
+
+    100% {
+      opacity: 100%;
+    }
   }
 </style>
