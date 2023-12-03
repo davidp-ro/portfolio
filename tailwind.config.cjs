@@ -5,7 +5,7 @@ const config = {
 
   theme: {
     fontFamily: {
-      sans: ["Source Sans Pro", ...defaultTheme.fontFamily.sans],
+      sans: ["Urbanist", ...defaultTheme.fontFamily.sans],
       serif: ["Source Serif Pro", ...defaultTheme.fontFamily.serif],
     },
     extend: {
@@ -32,7 +32,7 @@ const config = {
           300: "#2A3C51",
           400: "#1C2836",
           500: "#0E141B",
-          600: "#000000",
+          600: "#05050c",
           700: "#000000",
           800: "#000000",
           900: "#000000",

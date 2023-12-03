@@ -1,11 +1,11 @@
 <script>
   import "../app.postcss";
 
-  import { dev } from '$app/environment';
-  import { inject } from '@vercel/analytics';
+  import { dev } from "$app/environment";
+  import { inject } from "@vercel/analytics";
 
   // Vercel Analytics
-  inject({ mode: dev ? 'development' : 'production' });
+  inject({ mode: dev ? "development" : "production" });
 </script>
 
 <slot />
@@ -47,6 +47,6 @@
 
 <style global lang="postcss">
   body {
-    @apply antialiased bg-base text-white selection:bg-accent-200 selection:text-base-800;
+    @apply antialiased bg-base-600 text-white selection:bg-accent-200 selection:text-base-800;
   }
 </style>

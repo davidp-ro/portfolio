@@ -11,9 +11,12 @@
       const halfScreenHeight = window.innerHeight / 2;
       const halfScreenWidth = window.innerWidth / 2;
 
-      // Width & Height of the is 80rem (=320px) so half is 160
+      // Width & Height of the blob is 80rem (=320px) so half is 160
       const posX = clientX - halfScreenWidth - 160;
       const posY = clientY - halfScreenHeight - 160;
+
+      const ON_MOVING_SIZE_REM = 30;
+      const ON_STATIC_SIZE_REM = 25;
 
       el?.animate(
         {
@@ -21,8 +24,26 @@
           // we get a good CLS (Cumulative Layout Shift) score!
           transform: `translate(${posX}px, ${posY}px)`,
         },
-        { duration: 3000, fill: "forwards" }
+        { duration: 3500, fill: "forwards" }
       );
+
+      el?.animate(
+        {
+          height: `${ON_MOVING_SIZE_REM}rem`,
+          width: `${ON_MOVING_SIZE_REM}rem`,
+        },
+        { duration: 1000, fill: "forwards" }
+      );
+
+      setTimeout(() => {
+        el?.animate(
+          {
+            height: `${ON_STATIC_SIZE_REM}rem`,
+            width: `${ON_STATIC_SIZE_REM}rem`,
+          },
+          { duration: 4000, fill: "forwards" }
+        );
+      }, 1500);
     });
   };
 
@@ -47,7 +68,7 @@
   /* Classes */
 
   .blob {
-    @apply invisible md:visible h-80 w-80 opacity-30 rounded-full
+    @apply invisible md:visible h-[25rem] w-[25rem] opacity-30 rounded-full
       fixed top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2
       bg-gradient-to-r from-pink-500 via-red-500 to-yellow-500;
 
