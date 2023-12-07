@@ -1,3 +1,7 @@
+<script>
+  import BookMeetingButton from "./buttons/bookMeetingButton.svelte";
+</script>
+
 <!-- Icon credit: https://brittanychiang.com/ -->
 
 <div class="socials-row custom-fade-in-socials">
@@ -94,15 +98,35 @@
 </div>
 
 <div class="custom-fade-in-socials">
-  <p class="md:hidden md:mt-0 mt-8 font-light">Opportunities? Let's talk!</p>
+  <p class="md:hidden md:mt-0 mt-12 font-light">
+    <BookMeetingButton noMargin={true} />
+    <br />
+    Or shoot me an email:
+  </p>
   <a
-    href="mailto:davidpescariu12@gmail.com?subject=Hello!"
+    href="mailto:hello@davidpescariu.com?subject=Hello!"
     target="_blank"
     rel="noopener noreferer"
     class="email no-border"
   >
-    davidpescariu12@gmail.com
+    hello@davidpescariu.com
   </a>
+</div>
+
+<div class="scroll-msg">
+  scroll to see more
+  <br />
+
+  <svg
+    class="animate-bounce h-5 w-5 mx-auto mt-2"
+    xmlns="http://www.w3.org/2000/svg"
+    viewBox="0 0 24 24"
+  >
+    <path
+      fill="currentColor"
+      d="M12 14.975q-.2 0-.375-.062T11.3 14.7l-4.6-4.6q-.275-.275-.275-.7t.275-.7q.275-.275.7-.275t.7.275l3.9 3.9l3.9-3.9q.275-.275.7-.275t.7.275q.275.275.275.7t-.275.7l-4.6 4.6q-.15.15-.325.213t-.375.062Z"
+    />
+  </svg>
 </div>
 
 <style lang="postcss">
@@ -148,6 +172,14 @@
     animation: fade-in-animation 1000ms cubic-bezier(0.4, 0, 0.2, 1);
     animation-fill-mode: both;
     animation-delay: 500ms;
+  }
+
+  .scroll-msg {
+    animation: fade-in-animation 1000ms cubic-bezier(0.4, 0, 0.2, 1);
+    animation-fill-mode: both;
+    animation-delay: 1000ms;
+
+    @apply mt-24 md:mt-[55vh] text-center text-gray-400 font-light select-none;
   }
 
   @keyframes fade-in-animation {

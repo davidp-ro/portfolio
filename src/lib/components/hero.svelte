@@ -1,18 +1,18 @@
 <section class="mt-32 md:mt-64">
-  <div class="hero-name custom-fade-in anim-delay-100">Hi there! I'm David 👋</div>
+  <div class="hero-name custom-fade-in anim-delay-100">
+    Hi there! I'm David 👋
+  </div>
 
   <div class="hero-title custom-fade-in anim-delay-500">
     I create digital products.
   </div>
 
   <p class="hero-subtitle custom-fade-in anim-delay-900">
-    I'm a developer, student, <a
-      href="https://www.prisma-safety.com/"
-      target="_blank"
-      rel="noopener noreferer"
+    Full Stack Development & Consultancy - Have a project in mind? <a
+      href="#get-in-touch"
     >
-      co-founder
-    </a> & volunteer from Cluj, 🇷🇴. Not necessarily in that order.
+      Get in touch!
+    </a>
   </p>
 </section>
 
@@ -26,7 +26,7 @@
   }
 
   .hero-subtitle {
-    @apply mt-10 font-light sm:text-2xl text-xl;
+    @apply mt-8 font-light sm:text-2xl text-xl;
   }
 
   a {
