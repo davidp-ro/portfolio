@@ -55,19 +55,34 @@
   </a>
 
   <WorkCard
+    title="Full-Stack Developer"
+    company="Freelancing"
+    period="Jun 2023 - Present"
+    bullets={[
+      `Architecting and building complete, modular & scalable products, from MVPs
+      and Product Market-Fit solutions to full-scale production apps & services.`,
+      `Specialised in web solutions, my stack being composed of SvelteKit, Node.js
+      & Firebase/Google Cloud, but I'm always eager to explore new technologies!`,
+      `I am working with clients from around the world, both local as well as
+      international - primarily the USA & Germany, and with teams of all sizes.`,
+    ]}
+  />
+
+  <WorkCard
     title="Co-Founder & (Lead) Full-Stack Developer"
     company="Prisma Safety"
-    period="Apr 2021 - Present"
+    period="Apr 2021 - May 2023"
     bullets={[
-      `Manage our development team & implement the Prisma App (Flutter), Prisma
-        Websites & Platforms (Svelte/SvelteKit) and all backend infrastructure -
-        public and private facing REST APIs.`,
-      `Develop caching systems using HiveDB to decrease the mobile app's
+      `Managed development & implementation of the Prisma App, Websites &
+        Platforms and all backend infrastructure using modern tech stacks
+        (Flutter, Firebase, NodeJs, SvelteKit).`,
+      `Developed caching systems using HiveDB to decrease the mobile app's
         startup time by 5 times.`,
-      `Implement billing services with Stripe and authentication flows using
+      `Implemented billing services with Stripe and authentication flows using
         Auth0.`,
-      `Handle CI / CD of our platforms - Front facing platforms on Netlify and
-        backend infra on Heroku / Functions and Firebase or Supabase.`,
+      `Handled CI / CD of our platforms, deploying front-facing platforms on
+        Netlify and managing backend infrastructure on Heroku/Functions and
+        Firebase or Supabase.`,
     ]}
   />
 
@@ -93,7 +108,6 @@
   </h2>
 
   <Projects />
-
 </section>
 
 <style lang="postcss">
