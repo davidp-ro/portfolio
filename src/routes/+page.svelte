@@ -10,7 +10,9 @@
 <BackgroundBlob />
 
 <main class="absolute top-0 left-0 z-10 w-full h-full">
-  <div class="md:max-w-6xl xl:mx-auto lg:mx-48 md:mx-32 sm:mx-24 mx-10">
+  <div
+    class="md:max-w-6xl 2xl:mx-auto xl:mx-36 lg:mx-48 md:mx-32 sm:mx-24 mx-10"
+  >
     <Hero />
     <Socials />
 
