@@ -10,7 +10,7 @@ export default function ExperienceButtons() {
       <Button
         className="gap-2"
         variant="secondary"
-        onClick={() => openInNewTab("/docs/temp.txt")}
+        onClick={() => openInNewTab("/docs/David_Pescariu-Resume.pdf")}
       >
         <FileText size={16} />
         <p>View my Résumé</p>
