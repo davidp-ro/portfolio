@@ -13,7 +13,7 @@ export const WORK_EXPERIENCE: WorkExpItem[] = [
     title: "Founding Software Engineer",
     company: "SalesKick",
     imgPath: "/company_logos/saleskick-logo.png",
-    location: "Arizona, USA",
+    location: "Scottsdale, USA",
     startDate: "Sep 2023",
     endDate: "Present",
     description: [
