@@ -6,6 +6,7 @@ import "./globals.css";
 const workSans = Work_Sans({ subsets: ["latin"] });
 
 export const metadata: Metadata = {
+  metadataBase: new URL("https://davidpescariu.com"),
   title: "David Pescariu",
   description:
     "Hi there! 👋 I'm David - a software engineer that strives for perfection while building products that scale alongside your business.",
