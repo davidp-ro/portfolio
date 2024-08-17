@@ -34,7 +34,7 @@ export default function Header({ baseDelay }: { baseDelay: number }) {
       </BlurFade>
 
       <BlurFade className="mt-6" delay={baseDelay + NOMINAL_DELAY * 3}>
-        <CallButton />
+        <CallButton variant="header" />
       </BlurFade>
     </header>
   );
