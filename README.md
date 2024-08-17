@@ -1,16 +1,14 @@
-# portfolio
-
 ## Hello 👋
 
 This is the source for my little corner of the internet.
 
-### Tech
+### Built with:
 
-- [Svelte](https://svelte.dev/)
+- [Next.js](https://nextjs.org/)
 - [Tailwind CSS](https://tailwindcss.com/)
-- That's it! Keeping it simple :)
+- [shadcn/ui](https://ui.shadcn.com/)
+- [magic-ui](https://magicui.design/)
 
-### Credits
+> My portfolio went trough multiple versions during the years, most of them used SvelteKit, but this is officially the first version that uses Next.js.
 
-- Some layout inspo from [Brittany Chiang](https://brittanychiang.com/)
-- Icons from [Font Awesome](https://fontawesome.com/)
+Built with ❤️ by... me!
