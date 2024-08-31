@@ -1,7 +1,7 @@
-import { Post } from "@/lib/posts";
-import WordPullUp from "./magicui/word-pull-up";
-import BlurFade from "./magicui/blur-fade";
 import { NOMINAL_DELAY } from "@/lib/constants";
+import { Post } from "@/lib/posts";
+import Link from "next/link";
+import BlurFade from "./magicui/blur-fade";
 
 export default function PostHeader({ post }: { post: Post }) {
   return (
@@ -15,7 +15,10 @@ export default function PostHeader({ post }: { post: Post }) {
         <time dateTime={post.date}>
           {new Date(post.date).toLocaleDateString("en-US")}
         </time>
-        , {post.author}
+        ,{" "}
+        <Link className="hover:underline" href="/">
+          {post.author}
+        </Link>
       </BlurFade>
     </header>
   );

@@ -8,8 +8,11 @@ export interface PostData {
   tags: string[];
 }
 
-export interface Post extends PostData {
+export interface PostDataWithSlug extends PostData {
   slug: string;
+}
+
+export interface Post extends PostDataWithSlug {
   content: string;
 }
 
