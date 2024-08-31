@@ -1,14 +1,19 @@
+import "./hljs.css";
+
 import PostContent from "@/components/PostContent";
 import PostFooter from "@/components/PostFooter";
 import PostHeader from "@/components/PostHeader";
 import { NOMINAL_DELAY } from "@/lib/constants";
 import { Post, PostData, POSTS_DIR } from "@/lib/posts";
-import { log } from "console";
 import fs from "fs";
 import matter from "gray-matter";
 import path from "path";
-import { remark } from "remark";
-import html from "remark-html";
+import rehypeHighlight from "rehype-highlight";
+import rehypeSanitize from "rehype-sanitize";
+import rehypeStringify from "rehype-stringify";
+import remarkParse from "remark-parse";
+import remarkRehype from "remark-rehype";
+import { unified } from "unified";
 
 const getPostData = async (slug: string) => {
   const file = path.join(POSTS_DIR, `${slug}.md`);
@@ -17,15 +22,19 @@ const getPostData = async (slug: string) => {
   // Parse with gray-matter to extract the data section
   const matterResult = matter(fileContents);
 
-  // Convert markdown to HTML
-  const processedContent = await remark()
-    .use(html)
+  // Convert markdown to HTML and process with plugins
+  const processed = await unified()
+    .use(remarkParse)
+    .use(remarkRehype)
+    .use(rehypeSanitize)
+    .use(rehypeHighlight)
+    .use(rehypeStringify)
     .process(matterResult.content);
 
   return {
     slug,
     ...(matterResult.data as PostData),
-    content: processedContent.toString(),
+    content: processed.toString(),
   } satisfies Post;
 };
 
