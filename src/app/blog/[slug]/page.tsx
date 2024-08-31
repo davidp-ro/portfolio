@@ -49,3 +49,41 @@ export default async function PostPage({ params }: PostPageParams) {
     </main>
   );
 }
+
+export async function generateMetadata({ params }: PostPageParams) {
+  const post = await getPostData(params.slug);
+  return {
+    metadataBase: new URL("https://davidpescariu.com"),
+    title: `${post.title} - David Pescariu`,
+    description: post.description,
+    keywords: post.tags,
+    authors: [{ name: "David Pescariu", url: "https://davidpescariu.com" }],
+    robots: "index, follow",
+    icons: {
+      icon: "/logo.svg",
+      shortcut: "/logo.svg",
+    },
+    openGraph: {
+      type: "website",
+      locale: "en_US",
+      url: "https://davidpescariu.com",
+      title: `${post.title} - David Pescariu`,
+      description: post.description,
+      siteName: "David Pescariu",
+      images: [
+        {
+          url: "/og.jpg",
+          width: 1200,
+          height: 630,
+          alt: "David Pescariu - Portfolio",
+        },
+      ],
+    },
+    twitter: {
+      creator: "@DPescariu",
+      card: "summary_large_image",
+      description: `${post.title} - David Pescariu`,
+      images: [{ url: "/og.jpg", alt: "David Pescariu - Portfolio" }],
+    },
+  };
+}
