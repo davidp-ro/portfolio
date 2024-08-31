@@ -2,6 +2,7 @@ import { TooltipProvider } from "@radix-ui/react-tooltip";
 import type { Metadata } from "next";
 import { Work_Sans } from "next/font/google";
 import "./globals.css";
+import { Analytics } from "@vercel/analytics/next";
 
 const workSans = Work_Sans({ subsets: ["latin"] });
 
@@ -49,6 +50,7 @@ export default function RootLayout({
     <html lang="en" className="dark">
       <body className={workSans.className}>
         <TooltipProvider>{children}</TooltipProvider>
+        <Analytics />
       </body>
     </html>
   );
