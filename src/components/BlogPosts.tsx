@@ -1,23 +1,24 @@
-import { PostData, PostDataWithSlug, POSTS_DIR } from "@/lib/posts";
-import fs from "fs";
+import {
+  getPostFile,
+  getPostsSlugs,
+  PostData,
+  PostDataWithSlug,
+  PostsStaticReadFile,
+} from "@/lib/posts";
 import matter from "gray-matter";
 import Link from "next/link";
-import path from "path";
 import BlogPostCard from "./BlogPostCard";
 import BlurFade from "./magicui/blur-fade";
 
-const getPostsDetails = () => {
-  const files = fs.readdirSync(POSTS_DIR);
+const getPostsDetails = (readFiles: PostsStaticReadFile[]) => {
   const postsDetails: PostDataWithSlug[] = [];
 
   // Extract the data section from each markdown file
-  for (const file of files) {
-    const filePath = path.join(POSTS_DIR, file);
-    const fileContents = fs.readFileSync(filePath, "utf8");
-    const matterResult = matter(fileContents);
+  for (const file of readFiles) {
+    const matterResult = matter(file.fileContents);
 
     postsDetails.push({
-      slug: file.replace(/\.md$/, ""),
+      slug: file.slug,
       ...(matterResult.data as PostData),
     } satisfies PostDataWithSlug);
   }
@@ -29,7 +30,9 @@ const getPostsDetails = () => {
 };
 
 export default function BlogPosts() {
-  const posts = getPostsDetails();
+  const posts = getPostsDetails(
+    getPostsSlugs().map((slug) => getPostFile(slug))
+  );
 
   return (
     <BlurFade className="mt-56" inView>

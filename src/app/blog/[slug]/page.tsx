@@ -4,10 +4,9 @@ import PostContent from "@/components/PostContent";
 import PostFooter from "@/components/PostFooter";
 import PostHeader from "@/components/PostHeader";
 import { NOMINAL_DELAY } from "@/lib/constants";
-import { Post, PostData, POSTS_DIR } from "@/lib/posts";
-import fs from "fs";
+import { getPostFile, getPostsSlugs, Post, PostData } from "@/lib/posts";
+
 import matter from "gray-matter";
-import path from "path";
 import rehypeHighlight from "rehype-highlight";
 import rehypeSanitize from "rehype-sanitize";
 import rehypeStringify from "rehype-stringify";
@@ -16,11 +15,10 @@ import remarkRehype from "remark-rehype";
 import { unified } from "unified";
 
 const getPostData = async (slug: string) => {
-  const file = path.join(POSTS_DIR, `${slug}.md`);
-  const fileContents = fs.readFileSync(file, "utf8");
+  const file = getPostFile(slug);
 
   // Parse with gray-matter to extract the data section
-  const matterResult = matter(fileContents);
+  const matterResult = matter(file.fileContents);
 
   // Convert markdown to HTML and process with plugins
   const processed = await unified()
@@ -32,13 +30,14 @@ const getPostData = async (slug: string) => {
     .process(matterResult.content);
 
   return {
-    slug,
+    slug: file.slug,
     ...(matterResult.data as PostData),
     content: processed.toString(),
   } satisfies Post;
 };
 
 type PostPageParams = { params: { slug: string } };
+
 export default async function PostPage({ params }: PostPageParams) {
   const post = await getPostData(params.slug);
   return (
@@ -86,4 +85,8 @@ export async function generateMetadata({ params }: PostPageParams) {
       images: [{ url: "/og.jpg", alt: "David Pescariu - Portfolio" }],
     },
   };
+}
+
+export async function generateStaticParams() {
+  return getPostsSlugs().map((slug) => ({ slug }));
 }
