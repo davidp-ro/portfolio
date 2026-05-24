@@ -7,8 +7,9 @@ import { NOMINAL_DELAY } from "@/lib/constants";
 import { getPostFile, getPostsSlugs, Post, PostData } from "@/lib/posts";
 
 import matter from "gray-matter";
+import rehypeAutolinkHeadings from "rehype-autolink-headings";
 import rehypeHighlight from "rehype-highlight";
-import rehypeSanitize from "rehype-sanitize";
+import rehypeSlug from "rehype-slug";
 import rehypeStringify from "rehype-stringify";
 import remarkParse from "remark-parse";
 import remarkRehype from "remark-rehype";
@@ -24,7 +25,30 @@ const getPostData = async (slug: string) => {
   const processed = await unified()
     .use(remarkParse)
     .use(remarkRehype)
-    .use(rehypeSanitize)
+    .use(rehypeSlug)
+    .use(rehypeAutolinkHeadings, {
+      behavior: "prepend",
+      properties: {
+        ariaLabel: "Link to section",
+        className: [
+          "anchor-link",
+          "text-muted-foreground!",
+          "no-underline!",
+          "mr-1.5",
+          "font-normal",
+          "hover:text-orange-600!",
+        ],
+      },
+      content: {
+        type: "element",
+        tagName: "span",
+        properties: {
+          className: ["anchor-icon"],
+          ariaHidden: "true",
+        },
+        children: [{ type: "text", value: "#" }],
+      },
+    })
     .use(rehypeHighlight)
     .use(rehypeStringify)
     .process(matterResult.content);
