@@ -36,10 +36,11 @@ const getPostData = async (slug: string) => {
   } satisfies Post;
 };
 
-type PostPageParams = { params: { slug: string } };
+type PostPageParams = { params: Promise<{ slug: string }> };
 
 export default async function PostPage({ params }: PostPageParams) {
-  const post = await getPostData(params.slug);
+  const { slug } = await params;
+  const post = await getPostData(slug);
   return (
     <main className="h-screen w-full max-w-4xl mx-auto p-4">
       <PostHeader post={post} />
@@ -50,7 +51,8 @@ export default async function PostPage({ params }: PostPageParams) {
 }
 
 export async function generateMetadata({ params }: PostPageParams) {
-  const post = await getPostData(params.slug);
+  const { slug } = await params;
+  const post = await getPostData(slug);
   return {
     metadataBase: new URL("https://davidpescariu.com"),
     title: `${post.title} - David Pescariu`,

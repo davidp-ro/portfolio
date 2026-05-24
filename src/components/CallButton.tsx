@@ -20,9 +20,7 @@ export default function CallButton({
             <span className="mr-0.5">🪄</span>
             {variant === "header" ? (
               <>
-                <span className="ml-1 hidden sm:inline">
-                  Can I help your team?
-                </span>
+                <span className="ml-1 hidden sm:inline">Wanna reach out?</span>
                 <span className="ml-1">Let's jump on a call</span>
               </>
             ) : (
