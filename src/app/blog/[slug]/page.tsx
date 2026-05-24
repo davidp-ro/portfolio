@@ -9,6 +9,7 @@ import { getPostFile, getPostsSlugs, Post, PostData } from "@/lib/posts";
 import matter from "gray-matter";
 import rehypeAutolinkHeadings from "rehype-autolink-headings";
 import rehypeHighlight from "rehype-highlight";
+import rehypeRaw from "rehype-raw";
 import rehypeSlug from "rehype-slug";
 import rehypeStringify from "rehype-stringify";
 import remarkParse from "remark-parse";
@@ -24,7 +25,8 @@ const getPostData = async (slug: string) => {
   // Convert markdown to HTML and process with plugins
   const processed = await unified()
     .use(remarkParse)
-    .use(remarkRehype)
+    .use(remarkRehype, { allowDangerousHtml: true })
+    .use(rehypeRaw)
     .use(rehypeSlug)
     .use(rehypeAutolinkHeadings, {
       behavior: "prepend",
