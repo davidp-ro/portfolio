@@ -168,7 +168,7 @@ If you use sensitive Google OAuth scopes (which the Calendar ones are), if you s
 
 **Recommendations:**
 
-- Go through the verification process _before_ (duh!) you run out of the 100 user cap for unverified apps. If you don't, the entire process just ends up being quite a lot more annoying. _Ask me how I know..._ If you do end up running out of users before verification:
+- Go through the verification process _before_ you run out of the 100 user cap for unverified apps. If you don't, the entire process just ends up being quite a lot more annoying. _Ask me how I know..._ If you do end up running out of users before verification:
   - Do not bother asking for an exception/increase - it will be denied.
   - It will likely not be an issue as far as the verification goes, because when recording the demo video, you can just use an account that had already been authorized.
 
@@ -239,7 +239,7 @@ Another set of calendars that you may want to filter out, are calendars that hav
 
 ## Use shared/private extended attributes
 
-This is a very quick tip - you will likely want to have a way of knowing which events were created/updated/etc by your system. The naive approach is to update the `description` with some sort of identifier, but this is not a good idea for a few reasons, but the most obvious one is that the description can be edited by a user from the UI.
+This is a very quick tip - you will likely want to have a way of knowing which events were created/updated/etc by your system. The naive approach is to update the `description` with some sort of identifier, but this is not a good idea for a few reasons - the most obvious one is that the description can be edited by a user from the UI.
 
 The "proper" way to do this, is to use one of the [two extended attributes fields](https://developers.google.com/workspace/calendar/api/v3/reference/events#:~:text=writable-,extendedProperties,-object) that Google Calendar provides:
 
@@ -277,7 +277,7 @@ The library we ended up using is [ics](https://www.npmjs.com/package/ics), and i
 
 **Sequencing:**
 
-As previously mentioned before, an important field in the .ics files is the `SEQUENCE` field. This is used to determine if an update is newer than the previous one.
+As mentioned before, an important field in the .ics files is the `SEQUENCE` field. This is used to determine if an update is newer than the previous one.
 
 - The initial invite should have `SEQUENCE:0`.
 - Any subsequent updates should update the sequence in a "monotonically incremented" manner. The proper way of doing this is to keep track of the sequence in your own system, and increment it every time you make an update.
@@ -291,7 +291,7 @@ As previously mentioned before, an important field in the .ics files is the `SEQ
 
 ## Pretty much everything can be `null`
 
-I cannot emphasize this enough - the only Event fields that will always be present are `id`, `kind` and `etag`. Everything else could be `null` or missing entirely, so you need to constantly be aware that many fields may not be available.
+Literally - the only Event fields that will always be present are `id`, `kind` and `etag`. Everything else could be `null` or missing entirely, so you need to constantly be aware that many fields may not be available.
 
 If the event isn't cancelled/deleted, you can generally expect the following fields to also be present:
 
