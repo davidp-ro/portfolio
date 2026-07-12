@@ -6,27 +6,68 @@ import PostHeader from "@/components/PostHeader";
 import { NOMINAL_DELAY } from "@/lib/constants";
 import { getPostFile, getPostsSlugs, Post, PostData } from "@/lib/posts";
 
+import type { Element, Nodes as HastNodes, Root as HastRoot } from "hast";
+import { toJsxRuntime } from "hast-util-to-jsx-runtime";
 import matter from "gray-matter";
+import { Fragment, jsx, jsxs } from "react/jsx-runtime";
 import rehypeAutolinkHeadings from "rehype-autolink-headings";
 import rehypeHighlight from "rehype-highlight";
-import rehypeRaw from "rehype-raw";
+import { rehypeMdxElements } from "rehype-mdx-elements";
 import rehypeSlug from "rehype-slug";
-import rehypeStringify from "rehype-stringify";
+import remarkMdx from "remark-mdx";
 import remarkParse from "remark-parse";
 import remarkRehype from "remark-rehype";
 import { unified } from "unified";
+import { visit } from "unist-util-visit";
+import { MDX_COMPONENTS } from "./mdxComponents";
 
-const getPostData = async (slug: string) => {
+// Tags whose direct children must never be wrapped in a <p>. remark-rehype
+// wraps inline JSX (mdxJsxTextElement) siblings in a paragraph — when the
+// parent's HTML content model forbids <p> as a direct child, that produces
+// invalid HTML (e.g. `<table><p><caption>`, `<ul><p><li>`) and triggers
+// hydration errors.
+const NO_P_WRAPPER_TAGS = new Set([
+  // Table structure
+  "table",
+  "thead",
+  "tbody",
+  "tfoot",
+  "tr",
+  // Lists
+  "ul",
+  "ol",
+  "dl",
+]);
+
+/**
+ * Rehype transform: unwrap any <p> that is a direct child of an element
+ * whose content model forbids <p> children, by replacing it with its own
+ * children.
+ */
+const rehypeUnwrapInvalidPs = () => (tree: HastRoot) => {
+  visit(tree, "element", (node: Element) => {
+    if (!NO_P_WRAPPER_TAGS.has(node.tagName)) return;
+    node.children = node.children.flatMap((child) =>
+      child.type === "element" && child.tagName === "p"
+        ? child.children
+        : child,
+    );
+  });
+};
+
+const getPostData = async (slug: string): Promise<Post> => {
   const file = getPostFile(slug);
 
   // Parse with gray-matter to extract the data section
   const matterResult = matter(file.fileContents);
 
-  // Convert markdown to HTML and process with plugins
-  const processed = await unified()
+  // Parse markdown (+ MDX JSX) into a hast tree with MDX JSX nodes preserved
+  const processor = unified()
     .use(remarkParse)
-    .use(remarkRehype, { allowDangerousHtml: true })
-    .use(rehypeRaw)
+    .use(remarkMdx)
+    .use(remarkRehype, {
+      passThrough: ["mdxJsxFlowElement", "mdxJsxTextElement"],
+    })
     .use(rehypeSlug)
     .use(rehypeAutolinkHeadings, {
       behavior: "prepend",
@@ -52,13 +93,24 @@ const getPostData = async (slug: string) => {
       },
     })
     .use(rehypeHighlight)
-    .use(rehypeStringify)
-    .process(matterResult.content);
+    .use(rehypeMdxElements)
+    .use(rehypeUnwrapInvalidPs);
+
+  const mdast = processor.parse(matterResult.content);
+  const hast = (await processor.run(mdast)) as HastNodes;
+
+  // Render the hast tree to React elements, wiring up our custom components
+  const content = toJsxRuntime(hast, {
+    Fragment,
+    jsx,
+    jsxs,
+    components: MDX_COMPONENTS,
+  });
 
   return {
     slug: file.slug,
     ...(matterResult.data as PostData),
-    content: processed.toString(),
+    content,
   } satisfies Post;
 };
 

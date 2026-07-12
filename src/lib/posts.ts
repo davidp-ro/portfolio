@@ -1,5 +1,6 @@
 import fs from "fs";
 import path from "path";
+import type { ReactNode } from "react";
 
 export interface PostsStaticReadFile {
   slug: string;
@@ -20,7 +21,7 @@ export interface PostDataWithSlug extends PostData {
 }
 
 export interface Post extends PostDataWithSlug {
-  content: string;
+  content: ReactNode;
 }
 
 export const POSTS_DIR = path.join(process.cwd(), "posts");
@@ -32,7 +33,7 @@ export const getPostsFiles = (): string[] => {
 export const getPostsSlugs = (): string[] => {
   console.log(
     "slugs",
-    getPostsFiles().map((file) => file.replace(/\.md$/, ""))
+    getPostsFiles().map((file) => file.replace(/\.md$/, "")),
   );
   return getPostsFiles().map((file) => file.replace(/\.md$/, ""));
 };
@@ -45,7 +46,7 @@ export const getPostFile = (slug: string): PostsStaticReadFile => {
         slug: file.replace(/\.md$/, ""),
         fileName: file,
         fileContents: fs.readFileSync(path.join(POSTS_DIR, file), "utf8"),
-      } satisfies PostsStaticReadFile)
+      }) satisfies PostsStaticReadFile,
   );
   const file = readFiles.find((file) => file.slug === slug);
 

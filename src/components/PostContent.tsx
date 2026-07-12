@@ -11,9 +11,10 @@ export default function PostContent({ post, delay }: PostContentProps) {
       <BlurFade delay={delay}>
         <article
           id={articleElementId}
-          className="prose dark:prose-invert max-w-none prose-a:text-orange-600 prose-code:before:content-none prose-code:after:content-none"
-          dangerouslySetInnerHTML={{ __html: post.content }}
-        />
+          className="prose dark:prose-invert max-w-none prose-a:text-orange-600 prose-code:before:content-none prose-code:after:content-none [&_tbody_td:first-child]:ps-2 [&_tbody_td:last-child]:pe-2 [&_tfoot_td:first-child]:ps-2 [&_tfoot_td:last-child]:pe-2"
+        >
+          {post.content}
+        </article>
       </BlurFade>
       <ArticleCodeCopy articleId={articleElementId} />
     </>
