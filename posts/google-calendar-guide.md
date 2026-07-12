@@ -23,7 +23,6 @@ For what it's worth, these were discovered while working on [SalesKick](https://
   - [Use shared/private extended attributes](#use-sharedprivate-extended-attributes)
   - [Set attendees properly (ie: as organizer)](#set-attendees-properly-ie-as-organizer)
   - [ICS files - they are horrible, treat them like timezones and don't try to reinvent the wheel](#ics-files---they-are-horrible-treat-them-like-timezones-and-dont-try-to-reinvent-the-wheel)
-  - [The event URLs will become useless if you move an event](#the-event-urls-will-become-useless-if-you-move-an-event)
 - [Different ways I messed up](#different-ways-i-messed-up)
   - [Pretty much everything can be `null`](#pretty-much-everything-can-be-null)
   - [Exponential backoff everywhere](#exponential-backoff-everywhere)
@@ -74,7 +73,7 @@ Let's look at the following scenario:
 ### When are events created on the Attendee's Google Calendar? (Reference Table)
 
 <table>
-  <caption>TLDR: ✅ = One Event, ✴️ = Two Events, ❌ = No Events (on B's calendar)<sup>†</sup></caption>
+  <caption>Legend: <SuccessIcon></SuccessIcon> = One Event, <DuplicateIcon></DuplicateIcon> = Two Events, <FailIcon></FailIcon> = No Events (on B's calendar)</caption>
   <thead>
     <tr>
       <th scope="col">B's "Add invitations..." settings</th>
@@ -84,51 +83,48 @@ Let's look at the following scenario:
   </thead>
   <tbody>
     <tr>
-      <th scope="row">From everyone</th>
-      <td>No</td>
-      <td>✴️ B will have two events on their calendar</td>
+      <th scope="row" rowspan="2">From everyone</th>
+      <td style="text-align: center;">No</td>
+      <td><DuplicateIcon></DuplicateIcon> B will have two events on their calendar</td>
     </tr>
     <tr>
-      <th scope="row">From everyone</th>
-      <td><b>Yes</b></td>
-      <td>✅ B will have one event on their calendar</td>
+      <td style="text-align: center;">Yes</td>
+      <td><SuccessIcon></SuccessIcon> B will have one event on their calendar</td>
     </tr>
-    <tr>
-      <th scope="row">Only if the sender is known</th>
-      <td>No</td>
+    <tr style="background-color: #1a1a1a;">
+      <th scope="row" rowspan="2">Only if the sender is known</th>
+      <td style="text-align: center;">No</td>
       <td>
         <i>Is this the first time we've interacted with B?</i>
         <ul>
-          <li>Yes: ❌ → ✴️ B won't have ANY events initially, and after they accept, they will have two events on their calendar</li>
-          <li>No: ✴️ B will have two events on their calendar</li>
+          <li>Yes: <FailIcon></FailIcon> → <DuplicateIcon></DuplicateIcon> B won't have ANY events initially, and after they accept, they will have two events on their calendar</li>
+          <li>No: <DuplicateIcon></DuplicateIcon> B will have two events on their calendar</li>
+        </ul>
+      </td>
+    </tr>
+    <tr style="background-color: #1a1a1a;">
+      <td style="text-align: center;"><b>Yes</b></td>
+      <td>
+        <i>Is this the first time we've interacted with B?</i>
+        <ul>
+          <li>Yes: <FailIcon></FailIcon> → <SuccessIcon></SuccessIcon> B won't have ANY events initially, and after they accept, they will have one event on their calendar</li>
+          <li>No: <SuccessIcon></SuccessIcon> B will have one event on their calendar</li>
         </ul>
       </td>
     </tr>
     <tr>
-      <th scope="row">Only if the sender is known</th>
-      <td><b>Yes</b></td>
-      <td>
-        <i>Is this the first time we've interacted with B?</i>
-        <ul>
-          <li>Yes: ❌ → ✅ B won't have ANY events initially, and after they accept, they will have one event on their calendar</li>
-          <li>No: ✅ B will have one event on their calendar</li>
-        </ul>
-      </td>
+      <th scope="row" rowspan="2">When I respond to the invitation in email</th>
+      <td style="text-align: center;">No</td>
+      <td><FailIcon></FailIcon> → <DuplicateIcon></DuplicateIcon> B won't have ANY events initially, and after they accept, they will have two events on their calendar</td>
     </tr>
     <tr>
-      <th scope="row">When I respond to the invitation in email</th>
-      <td>No</td>
-      <td>❌ → ✴️ B won't have ANY events initially, and after they accept, they will have two events on their calendar</td>
-    </tr>
-    <tr>
-      <th scope="row">When I respond to the invitation in email</th>
-      <td><b>Yes</b></td>
-      <td>❌ → ✅ B won't have ANY events initially, and after they accept, they will have one event on their calendar</td>
+      <td style="text-align: center;"><b>Yes</b></td>
+      <td><FailIcon></FailIcon> → <SuccessIcon></SuccessIcon> B won't have ANY events initially, and after they accept, they will have one event on their calendar</td>
     </tr>
   </tbody>
 </table>
 
-- What you should be able to notice at this point, is that if we don't manually specify an `iCalUID` when creating the Google Calendar event on the Calendar we manage, <b>that we then also use as the `UID` for any iCalendar files we create</b>, our attendee will end up with two events on their calendar.<sup>‡</sup>
+- What you should be able to notice at this point, is that if we don't manually specify an `iCalUID` when creating the Google Calendar event on the Calendar we manage, <b>that we then also use as the `UID` for any iCalendar files we create</b>, our attendee will end up with two events on their calendar.<sup>†</sup>
 
 ### Other tips & tricks around identifiers:
 
@@ -142,27 +138,68 @@ Let's look at the following scenario:
 
 <sup>\*</sup> Some clients may also use `DTSTAMP` to compare updates. As a rule of thumb, you should always set this timestamp to the current time when making any updates.
 
-<sup>†</sup> Apologies for the use of emojis, but it was an easy way to visualize this.
-
-<sup>‡</sup> This is assuming that B is using Google Calendar as well. If they're using a different calendar client, the behavior may be different, but it will probably only show up after accepting the invite (and it won't create two events, since the "Google Event" wouldn't exist for B).
+<sup>†</sup> This is assuming that B is using Google Calendar as well. If they're using a different calendar client, the behavior may be different, but it will probably only show up after accepting the invite (and it won't create two events, since the "Google Event" wouldn't exist for B).
 
 ## Internal/holiday calendar detection
 
-aa
+You probably noticed that in Google Calendar, there are some "default" events that are automatically added - for example "New Year's Day". These are coming from what are commonly referred to as holiday or observance calendars. Now, unless you're building a calendar client, you probably don't want to sync these events into your system.
+
+We can look, for example at the "Holidays in United States" calendar, which has the following ID: `en.usa#holiday@group.v.calendar.google.com`. Note the `@group.v.calendar.google.com` suffix - this is what we can use to filter out these calendars.
+
+<FailIcon></FailIcon> **Important:** Do not filter out `@group.calendar.google.com` (without the "v") calendars! These are calendars that were created by users, and are not holiday/observance calendars. For example, their IDs can look something like this: `c_c5e09...2fdc@group.calendar.google.com`.
+
+Another set of calendars that you may want to filter out, are calendars that have been imported. For example, I have an "F1 Calendar" one that's imported from a URL ([this one](https://files-f1.motorsportcalendars.com/f1-calendar_p1_p2_p3_qualifying_sprint_gp.ics?t=1675449333421) in case you want it too!), and if our system is only interested in processing user events, we can ignore these as well. Their IDs will have the following suffix: `@import.calendar.google.com`.
+
+**Quick Reference Table:**
+
+<table>
+  <thead>
+    <tr>
+      <th scope="col">Calendar Type</th>
+      <th scope="col">Safe to Filter Out</th>
+      <th scope="col">ID Suffix</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>Holiday/Observance</td>
+      <td>Yes</td>
+      <td><code>@group.v.calendar.google.com</code></td>
+    </tr>
+    <tr>
+      <td>Imported</td>
+      <td>Yes</td>
+      <td><code>@import.calendar.google.com</code></td>
+    </tr>
+    <tr>
+      <td>User-created</td>
+      <td><b>No</b></td>
+      <td><code>@group.calendar.google.com</code></td>
+    </tr>
+    <tr>
+      <td>User's default Calendar (<code>primary</code>)</td>
+      <td><b>No</b></td>
+      <td>Varies - it will typically be the user's email</td>
+    </tr>
+  </tbody>
+</table>
 
 ## Use shared/private extended attributes
 
-aa
+This is a very quick tip - you will likely want to have a way of knowing which events were creating/updated/etc by your system. The naive approach is to update the `description` with some sort of identifier, but this is not a good idea for a few reasons, but the most obvious one is that the description can be edited by a user from the UI.
+
+The "proper" way to do this, is to use one of the [two extended attributes fields](https://developers.google.com/workspace/calendar/api/v3/reference/events#:~:text=writable-,extendedProperties,-object) that Google Calendar provides:
+
+- `extendedProperties.private` - "Properties that are private to the copy of the event that appears on this calendar";
+- `extendedProperties.shared` - "Properties that are shared between copies of the event on other attendees' calendars".
+
+You can store arbitrary key-value pairs in these fields, and they will be preserved when the event is updated. Do note that they can be overwritten at any time by any API users, so you should not use these as a singular place to store information - always have your own internal record of any data you may need.
 
 ## Set attendees properly (ie: as organizer)
 
 aa
 
 ## ICS files - they are horrible, treat them like timezones and don't try to reinvent the wheel
-
-aa
-
-## The event URLs will become useless if you move an event
 
 aa
 
