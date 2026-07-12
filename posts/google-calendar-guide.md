@@ -1,7 +1,7 @@
 ---
 title: "The Google Calendar API: A (not) definitive guide"
 description: "I went through a lot of pain integrating with the Google Calendar API - here's what I learned."
-date: "2026-05-24"
+date: "2026-07-12"
 author: "David Pescariu"
 tags: ["typescript", "google-calendar", "api", "guide"]
 ---
@@ -19,14 +19,17 @@ For what it's worth, these were discovered while working on [SalesKick](https://
   - [The `iCalUID` is your friend, while Google's `id` is probably not](#the-icaluid-is-your-friend-while-googles-id-is-probably-not)
     - [When are events created on the Attendee's Google Calendar? (Reference Table)](#when-are-events-created-on-the-attendees-google-calendar-reference-table)
     - [Other tips & tricks around identifiers:](#other-tips--tricks-around-identifiers)
+  - [OAuth and User Access](#oauth-and-user-access)
+    - [OAuth Scopes](#oauth-scopes)
+    - [OAuth Verification](#oauth-verification)
+    - [Loosing access to accounts](#loosing-access-to-accounts)
   - [Internal/holiday calendar detection](#internalholiday-calendar-detection)
   - [Use shared/private extended attributes](#use-sharedprivate-extended-attributes)
-  - [Set attendees properly (ie: as organizer)](#set-attendees-properly-ie-as-organizer)
-  - [ICS files - they are horrible, treat them like timezones and don't try to reinvent the wheel](#ics-files---they-are-horrible-treat-them-like-timezones-and-dont-try-to-reinvent-the-wheel)
+  - [Set attendees properly](#set-attendees-properly)
+  - [iCalendar (.ics) files](#icalendar-ics-files)
 - [Different ways I messed up](#different-ways-i-messed-up)
   - [Pretty much everything can be `null`](#pretty-much-everything-can-be-null)
   - [Exponential backoff everywhere](#exponential-backoff-everywhere)
-  - [OAuth Scopes (or how there's no need to require a million scopes)](#oauth-scopes-or-how-theres-no-need-to-require-a-million-scopes)
 
 ---
 
@@ -140,6 +143,48 @@ Let's look at the following scenario:
 
 <sup>†</sup> This is assuming that B is using Google Calendar as well. If they're using a different calendar client, the behavior may be different, but it will probably only show up after accepting the invite (and it won't create two events, since the "Google Event" wouldn't exist for B).
 
+## OAuth and User Access
+
+### OAuth Scopes
+
+Here, it was definitely my lackluster understanding of Google's OAuth scopes that caused headaches, but hey, we're supposed to learn from mistakes!
+
+When I first started implementing Google Calendar, I assumed I would need to request all these:
+
+- `https://www.googleapis.com/auth/calendar`
+- `https://www.googleapis.com/auth/calendar.calendarlist`
+- `https://www.googleapis.com/auth/calendar.events`
+- `https://www.googleapis.com/auth/calendar.events.owned`
+
+However, in reality, the only one you need to have full access to Calendar Lists, Events, everything, is `https://www.googleapis.com/auth/calendar`. The others are redundant. Of course, assuming your system cannot work with less... you should always respect the principle of least privilege and only request the scopes you need. For example, if your system only needs to read events, you can use `https://www.googleapis.com/auth/calendar.events.readonly` instead of the full access scope.
+
+### OAuth Verification
+
+If you use sensitive Google OAuth scopes (which the Calendar ones are), if you set the audience to "External", you will need to go through a verification process. Until you do, when you try to log in and authorize your app, you will the big scary warning that says "This app isn't verified".
+
+**Recommendations:**
+
+- Go through the verification process _before_ (duh!) you run out of the 100 user cap for unverified apps. If you don't, the entire process just ends up being quite a lot more annoying. _Ask me how I know..._ If you do end up running out of users before verification:
+  - Do not bother asking for an exception/increase - it will be denied.
+  - It will likely not be an issue as far as the verification goes, because when recording the demo video, you can just use an account that had already been authorized.
+
+- For the demo, make sure to demonstrate how you use each scope - for example we had Google Calendar and Google Sheets scopes, so we had to show how we used both of them.
+
+- Be prepared to have to make changes to your app if requested. In our case, we had to remove the Spreadsheets scope, and switch to using the [`drive.file` scope](https://developers.google.com/workspace/drive/api/guides/api-specific-auth#benefits) in order to continue the verification process. This was because the Spreadsheets scope was considered too broad and we were not following the principle of least privilege.
+
+- The entire process took about a month from us, to go from the initial submission, to implementing the requested changes, to getting verified. Make sure you can plan for this in your timeline.
+  - With this being said, the verification team was very responsive - you could generally expect a reply within 48 hours.
+
+### Loosing access to accounts
+
+You must be prepared to lose access to account, calendars, etc:
+
+- Resources (accounts, calendars, etc) get deleted as, for example, employees leave a company.
+- Users can revoke access to your app at any time.
+- Your user can lose access to shared calendars.
+
+Detection can happen by analyzing the API responses (errors, especially), and whenever you get a "traditional" 403, etc, start your "access lost" process.
+
 ## Internal/holiday calendar detection
 
 You probably noticed that in Google Calendar, there are some "default" events that are automatically added - for example "New Year's Day". These are coming from what are commonly referred to as holiday or observance calendars. Now, unless you're building a calendar client, you probably don't want to sync these events into your system.
@@ -195,26 +240,70 @@ The "proper" way to do this, is to use one of the [two extended attributes field
 
 You can store arbitrary key-value pairs in these fields, and they will be preserved when the event is updated. Do note that they can be overwritten at any time by any API users, so you should not use these as a singular place to store information - always have your own internal record of any data you may need.
 
-## Set attendees properly (ie: as organizer)
+## Set attendees properly
 
-aa
+Another short one, but I have previously made the mistake of not setting this properly.
 
-## ICS files - they are horrible, treat them like timezones and don't try to reinvent the wheel
+**Organizers:**
 
-aa
+When creating events, you should always set the `organizer` field, and add the Organizer as an attendee as well. There could be some situations where maybe you don't want to have them be an attendee, but in generale they should be added. A subsequent tip is to ensure that you set [`organizer: true`](https://developers.google.com/workspace/calendar/api/v3/reference/events#:~:text=attendees%5B%5D.organizer) for the organizer in the `attendees` array.
+
+**Statuses:**
+
+Each attendee has a `responseStatus` field, which should be set as following:
+
+- For the Organizer (if present) - set to `accepted`, because you own the event creation and can ensure it ends up on the calendar
+- For additional attendees, you **must** set it to `needsAction`, otherwise you risk the event not showing up on their calendar, or having an incorrect status (they haven't actually accepted, but you marked it as such).
+
+You can find more details in the [`attendees[].responseStatus` docs](https://developers.google.com/workspace/calendar/api/v3/reference/events#:~:text=attendees%5B%5D.responseStatus).
+
+## iCalendar (.ics) files
+
+There's a great video from Tom Scott on the Computerphile YouTube channel that goes over timezones: [The Problem with Time & Timezones - Computerphile](https://www.youtube.com/watch?v=-5wpm-gesOY). The conclusion of that video is that if you can avoid having to work with timezones, you absolutely should, and if you cannot avoid it, you should use a library that handles them for you.
+
+The iCalendar specification - [RFC 5545](https://datatracker.ietf.org/doc/html/rfc5545), originally published in 1998 - is at the core of how calendar clients communicate with each other. However, as it usually is with this sort of things, there are so many things you need to watch out for (one example being how lines should be folded, under a specific number of characters, and with the proper line endings), that you should not try to implement this yourself.
+
+The library we ended up using is [ics](https://www.npmjs.com/package/ics), and it has been working well for us.
+
+**Sequencing:**
+
+As previously mentioned before, an important field in the .ics files is the `SEQUENCE` field. This is used to determine if an update is newer than the previous one.
+
+- The initial invite should have `SEQUENCE:0`.
+- Any subsequent updates should update the sequence in a "monotonically incremented" manner. The proper way of doing this is to keep track of the sequence in your own system, and increment it every time you make an update.
+  - However, there's one more way of doing it - there isn't an explicit requirement that the sequence must be incremented by 1, so you can also use a timestamp as the sequence number, this way you can naturally ensure that the sequence is always increasing.
 
 ---
 
 # Different ways I messed up
 
+> If you work with calendars and nothing seems broken... you just haven't found the issue yet.
+
 ## Pretty much everything can be `null`
 
-bb
+I cannot emphasize this enough - the only Event fields that will always be present are `id`, `kind` and `etag`. Everything else could be `null` or missing entirely, so you need to constantly be aware that many fields may not be available.
+
+If the event isn't cancelled/deleted, you can generally expect the following fields to also be present:
+
+- `start` and `end` _(be careful to treat all-day events properly, as they will have a `date` instead of `dateTime`)._
+- `iCalUID`
+- `htmlLink`
+
+Some of the tricky ones to handle:
+
+- `status` - it depends on what your product/system is supposed to do to decide if you treat this as `cancelled` or `confirmed`. We chose to default to `confirmed`.
+- `organizer` - can be entirely null or just be missing properties like `email`.
+- `created` - genuinely don't understand how Google Calendar could allow this to be `null`, but yes it can be - have seen it happen in production.
+- `creator` - similar to `organizer`, can be null or missing properties like `email`.
+- `summary` and `description` - both can be `null` or empty strings.
+- `transparency` - this is an expected one, and as the documentation says, if not provided, you **must** consider it as `opaque` (busy).
+- `eventType` - if not provided, you should just treat it as `default`.
 
 ## Exponential backoff everywhere
 
-bb
+This is something that can be applied when working with any external APIs, but it's worth mentioning here. You should always implement backoff strategies when working with this API in particular, and you should be aware of the [rate limits](https://developers.google.com/workspace/calendar/api/guides/quota) that apply, as some may require you to backoff more aggressively than others.
 
-## OAuth Scopes (or how there's no need to require a million scopes)
+**Additional notes:**
 
-bb
+- Reconciliation/Matching or Syncing jobs should be designed to be idempotent and retryable.
+- Be aware that some limits may be lower for newly created projects, accounts, etc - [details](https://knowledge.workspace.google.com/admin/calendar/avoid-calendar-use-limits?visit_id=639194457610867869-2885663962&rd=1#usage_guidelines_for_paid_accounts).
