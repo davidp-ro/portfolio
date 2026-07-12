@@ -22,7 +22,7 @@ For what it's worth, these were discovered while working on [SalesKick](https://
   - [OAuth and User Access](#oauth-and-user-access)
     - [OAuth Scopes](#oauth-scopes)
     - [OAuth Verification](#oauth-verification)
-    - [Loosing access to accounts](#loosing-access-to-accounts)
+    - [Losing access to accounts](#losing-access-to-accounts)
   - [Internal/holiday calendar detection](#internalholiday-calendar-detection)
   - [Use shared/private extended attributes](#use-sharedprivate-extended-attributes)
   - [Set attendees properly](#set-attendees-properly)
@@ -164,7 +164,7 @@ However, in reality, the only one you need to have full access to Calendar Lists
 
 ### OAuth Verification
 
-If you use sensitive Google OAuth scopes (which the Calendar ones are), if you set the audience to "External", you will need to go through a verification process. Until you do, when you try to log in and authorize your app, you will the big scary warning that says "This app isn't verified".
+If you use sensitive Google OAuth scopes (which the Calendar ones are), if you set the audience to "External", you will need to go through a verification process. Until you do, when you try to log in and authorize your app, you will see the big scary warning that says "This app isn't verified".
 
 **Recommendations:**
 
@@ -176,12 +176,12 @@ If you use sensitive Google OAuth scopes (which the Calendar ones are), if you s
 
 - Be prepared to have to make changes to your app if requested. In our case, we had to remove the Spreadsheets scope, and switch to using the [`drive.file` scope](https://developers.google.com/workspace/drive/api/guides/api-specific-auth#benefits) in order to continue the verification process. This was because the Spreadsheets scope was considered too broad and we were not following the principle of least privilege.
 
-- The entire process took about a month from us, to go from the initial submission, to implementing the requested changes, to getting verified. Make sure you can plan for this in your timeline.
+- The entire process took about a month for us, to go from the initial submission, to implementing the requested changes, to getting verified. Make sure you can plan for this in your timeline.
   - With this being said, the verification team was very responsive - you could generally expect a reply within 48 hours.
 
-### Loosing access to accounts
+### Losing access to accounts
 
-You must be prepared to lose access to account, calendars, etc:
+You must be prepared to lose access to accounts, calendars, etc:
 
 - Resources (accounts, calendars, etc) get deleted as, for example, employees leave a company.
 - Users can revoke access to your app at any time.
@@ -239,7 +239,7 @@ Another set of calendars that you may want to filter out, are calendars that hav
 
 ## Use shared/private extended attributes
 
-This is a very quick tip - you will likely want to have a way of knowing which events were creating/updated/etc by your system. The naive approach is to update the `description` with some sort of identifier, but this is not a good idea for a few reasons, but the most obvious one is that the description can be edited by a user from the UI.
+This is a very quick tip - you will likely want to have a way of knowing which events were created/updated/etc by your system. The naive approach is to update the `description` with some sort of identifier, but this is not a good idea for a few reasons, but the most obvious one is that the description can be edited by a user from the UI.
 
 The "proper" way to do this, is to use one of the [two extended attributes fields](https://developers.google.com/workspace/calendar/api/v3/reference/events#:~:text=writable-,extendedProperties,-object) that Google Calendar provides:
 
@@ -254,11 +254,11 @@ Another short one, but I have previously made the mistake of not setting this pr
 
 **Organizers:**
 
-When creating events, you should always set the `organizer` field, and add the Organizer as an attendee as well. There could be some situations where maybe you don't want to have them be an attendee, but in generale they should be added. A subsequent tip is to ensure that you set [`organizer: true`](https://developers.google.com/workspace/calendar/api/v3/reference/events#:~:text=attendees%5B%5D.organizer) for the organizer in the `attendees` array.
+When creating events, you should always set the `organizer` field, and add the Organizer as an attendee as well. There could be some situations where maybe you don't want to have them be an attendee, but in general they should be added. A subsequent tip is to ensure that you set [`organizer: true`](https://developers.google.com/workspace/calendar/api/v3/reference/events#:~:text=attendees%5B%5D.organizer) for the organizer in the `attendees` array.
 
 **Statuses:**
 
-Each attendee has a `responseStatus` field, which should be set as following:
+Each attendee has a `responseStatus` field, which should be set as follows:
 
 - For the Organizer (if present) - set to `accepted`, because you own the event creation and can ensure it ends up on the calendar
 - For additional attendees, you **must** set it to `needsAction`, otherwise you risk the event not showing up on their calendar, or having an incorrect status (they haven't actually accepted, but you marked it as such).
@@ -271,7 +271,7 @@ You can find more details in the [`attendees[].responseStatus` docs](https://dev
 
 There's a great video from Tom Scott on the Computerphile YouTube channel that goes over timezones: [The Problem with Time & Timezones - Computerphile](https://www.youtube.com/watch?v=-5wpm-gesOY). The conclusion of that video is that if you can avoid having to work with timezones, you absolutely should, and if you cannot avoid it, you should use a library that handles them for you.
 
-The iCalendar specification - [RFC 5545](https://datatracker.ietf.org/doc/html/rfc5545), originally published in 1998 - is at the core of how calendar clients communicate with each other. However, as it usually is with this sort of things, there are so many things you need to watch out for (one example being how lines should be folded, under a specific number of characters, and with the proper line endings), that you should not try to implement this yourself.
+The iCalendar specification - [RFC 5545](https://datatracker.ietf.org/doc/html/rfc5545) - is at the core of how calendar clients communicate with each other. However, as it usually is with this sort of things, there are so many things you need to watch out for (one example being how lines should be folded, under a specific number of characters, and with the proper line endings), that you should not try to implement this yourself.
 
 The library we ended up using is [ics](https://www.npmjs.com/package/ics), and it has been working well for us.
 
