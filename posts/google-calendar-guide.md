@@ -57,6 +57,8 @@ As I've had the pleasure of finding out with [this bug report](https://issuetrac
 
 The workaround is to set `sendUpdates=none` and then send your own notifications to attendees. ICS files are their own beast as well, but more on that later.
 
+---
+
 ## The `iCalUID` is your friend, while Google's `id` is probably not
 
 This one's slightly more specific - I'm particularly referring to this in the context of being the "event creator" (the scheduling platform). When creating events, you can specify both `iCalUID` and `id` (but not at the same time). The documentation explains the difference between the two very clearly:
@@ -143,6 +145,8 @@ Let's look at the following scenario:
 
 <sup>†</sup> This is assuming that B is using Google Calendar as well. If they're using a different calendar client, the behavior may be different, but it will probably only show up after accepting the invite (and it won't create two events, since the "Google Event" wouldn't exist for B).
 
+---
+
 ## OAuth and User Access
 
 ### OAuth Scopes
@@ -184,6 +188,8 @@ You must be prepared to lose access to account, calendars, etc:
 - Your user can lose access to shared calendars.
 
 Detection can happen by analyzing the API responses (errors, especially), and whenever you get a "traditional" 403, etc, start your "access lost" process.
+
+---
 
 ## Internal/holiday calendar detection
 
@@ -229,6 +235,8 @@ Another set of calendars that you may want to filter out, are calendars that hav
   </tbody>
 </table>
 
+---
+
 ## Use shared/private extended attributes
 
 This is a very quick tip - you will likely want to have a way of knowing which events were creating/updated/etc by your system. The naive approach is to update the `description` with some sort of identifier, but this is not a good idea for a few reasons, but the most obvious one is that the description can be edited by a user from the UI.
@@ -256,6 +264,8 @@ Each attendee has a `responseStatus` field, which should be set as following:
 - For additional attendees, you **must** set it to `needsAction`, otherwise you risk the event not showing up on their calendar, or having an incorrect status (they haven't actually accepted, but you marked it as such).
 
 You can find more details in the [`attendees[].responseStatus` docs](https://developers.google.com/workspace/calendar/api/v3/reference/events#:~:text=attendees%5B%5D.responseStatus).
+
+---
 
 ## iCalendar (.ics) files
 
@@ -298,6 +308,8 @@ Some of the tricky ones to handle:
 - `summary` and `description` - both can be `null` or empty strings.
 - `transparency` - this is an expected one, and as the documentation says, if not provided, you **must** consider it as `opaque` (busy).
 - `eventType` - if not provided, you should just treat it as `default`.
+
+---
 
 ## Exponential backoff everywhere
 
