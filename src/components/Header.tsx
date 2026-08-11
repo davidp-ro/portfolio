@@ -11,24 +11,21 @@ export default function Header({ baseDelay }: { baseDelay: number }) {
         className="font-bold text-left text-6xl md:text-7xl"
         words="Hi there! 👋"
       />
+
       <BlurFade className="mt-6 text-xl" delay={baseDelay + NOMINAL_DELAY}>
-        I'm David - Founding software engineer with 4+ years of experience
-        working on systems that power $200M+ in monthly revenue.
+        I'm David — Founding Software Engineer building systems powering $40M+
+        in monthly client revenue.
       </BlurFade>
+
       <BlurFade
         className="mt-6 text-muted-foreground"
         delay={baseDelay + NOMINAL_DELAY * 2}
       >
         <span>
-          Experienced in architecting production-grade backend infrastructure,
-          booking & scheduling systems, and modern frontend applications with a
-          strong focus on scalability, reliability, performance, and product
-          quality.
+          I specialize in production-grade backend infrastructure, booking &
+          scheduling systems, and modern frontend applications, with a focus on
+          scalability, reliability, performance, and product quality.
         </span>
-      </BlurFade>
-
-      <BlurFade className="mt-6" delay={baseDelay + NOMINAL_DELAY * 3}>
-        <CallButton variant="header" />
       </BlurFade>
     </header>
   );

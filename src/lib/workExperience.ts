@@ -23,7 +23,7 @@ export const WORK_EXPERIENCE: WorkExpItem[] = [
       "Built AI-driven lead engagement systems using Generative AI, RAG pipelines, and sentiment analysis, increasing Lead Show Rate and Lead Quality by 60%+ and contributing to 2-2.5x revenue growth for clients.",
       "Implemented read-through caching, observability, and metrics pipelines, reducing scheduling latency by >80% and improving reliability across critical user flows.",
       "Led large-scale production codebase and infrastructure migrations with zero downtime, while managing cloud infrastructure using Terraform and infrastructure-as-code practices.",
-      "As the company's first engineer, established engineering foundations, onboarded new developers, and helped scale the platform from early-stage MVP to production infrastructure powering $200M+ in monthly revenue.",
+      "As the company's first engineer, established engineering foundations, onboarded new developers, and helped scale the platform from early-stage MVP to production infrastructure powering $40M+ in monthly revenue.",
     ],
   },
   {
